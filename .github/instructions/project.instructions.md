@@ -47,6 +47,7 @@ If product behavior is unclear, ask the user for the missing rule instead of inv
 - Each printer ticket must contain only the items relevant to that kitchen area.
 - Each printer ticket must include the user name that inserted the order, the table number, and whether the order was inserted from the POS app or the Tableside app.
 - All split tickets from the same order must share the same visible order number or reference.
+- The visible order number or reference is the standard PostgreSQL auto-incrementing integer for the order record.
 - Current known order states are `Sent` and `Printed`.
 - Do not assume cancellation or reprint behavior for the first version.
 - Do not invent additional kitchen-progress states unless the user asks for them.

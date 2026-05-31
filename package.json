@@ -1,0 +1,9 @@
+{
+  "name": "foodorders",
+  "private": true,
+  "packageManager": "pnpm@10.11.0",
+  "scripts": {
+    "install:all": "pnpm install",
+    "typecheck": "pnpm --filter @foodorders/backend typecheck"
+  }
+}

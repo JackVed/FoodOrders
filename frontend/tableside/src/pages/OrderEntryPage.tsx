@@ -245,6 +245,7 @@ function CartDialog({
   open,
   cartLines,
   tableNumber,
+  tableNumberError,
   onTableNumberChange,
   onClose,
   onDecrease,
@@ -257,6 +258,7 @@ function CartDialog({
   open: boolean;
   cartLines: CartLine[];
   tableNumber: string;
+  tableNumberError: string | null;
   onTableNumberChange: (value: string) => void;
   onClose: () => void;
   onDecrease: (key: string) => void;
@@ -278,6 +280,8 @@ function CartDialog({
             label="Tavolo"
             value={tableNumber}
             onChange={(event) => onTableNumberChange(event.target.value)}
+            error={Boolean(tableNumberError)}
+            helperText={tableNumberError}
             InputProps={{
               startAdornment: (
                 <InputAdornment position="start">
@@ -351,6 +355,7 @@ export function OrderEntryPage() {
   const [search, setSearch] = useState("");
   const deferredSearch = useDeferredValue(search);
   const [activeCategoryId, setActiveCategoryId] = useState<number | null>(null);
+  const [tableNumberError, setTableNumberError] = useState<string | null>(null);
   const [tableNumber, setTableNumber] = useState(() => {
     if (typeof window === "undefined") {
       return "1";
@@ -433,6 +438,7 @@ export function OrderEntryPage() {
   const estimatedCartTotalCents = cartLines.reduce((total, line) => total + line.quantity * line.estimatedUnitPriceCents, 0);
 
   function handleTableNumberChange(value: string) {
+    setTableNumberError(null);
     setTableNumber(value.replace(/\D/g, "").slice(0, 3));
   }
 
@@ -500,9 +506,14 @@ export function OrderEntryPage() {
     const parsedTableNumber = tableNumberSchema.safeParse(tableNumber);
 
     if (!parsedTableNumber.success) {
-      notify("Inserisci un numero di tavolo valido tra 1 e 999.", "warning");
+      const message = "Inserisci un numero di tavolo valido tra 1 e 999.";
+
+      setTableNumberError(message);
+      notify(message, "warning");
       return;
     }
+
+    setTableNumberError(null);
 
     const items: CreateOrderItemInput[] = cartLines.map((line) => ({
       menuItemId: line.menuItemId,
@@ -561,6 +572,8 @@ export function OrderEntryPage() {
                   label="Tavolo"
                   value={tableNumber}
                   onChange={(event) => handleTableNumberChange(event.target.value)}
+                  error={Boolean(tableNumberError)}
+                  helperText={tableNumberError}
                   sx={{ flex: 1 }}
                   InputProps={{
                     startAdornment: (
@@ -684,6 +697,7 @@ export function OrderEntryPage() {
         open={cartDialogOpen}
         cartLines={cartLines}
         tableNumber={tableNumber}
+        tableNumberError={tableNumberError}
         onTableNumberChange={handleTableNumberChange}
         onClose={() => setCartDialogOpen(false)}
         onDecrease={(key) => updateQuantity(key, -1)}

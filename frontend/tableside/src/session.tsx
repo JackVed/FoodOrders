@@ -1,4 +1,4 @@
-import { startTransition, useEffect, useEffectEvent, useState } from "react";
+import { startTransition, useCallback, useEffect, useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { createContext, useContext } from "react";
 import { Navigate, useLocation } from "react-router-dom";
@@ -27,15 +27,15 @@ export function SessionProvider({ children }: { children: React.ReactNode }) {
   const [status, setStatus] = useState<SessionStatus>("loading");
   const [bootstrapError, setBootstrapError] = useState<string | null>(null);
 
-  const clearSession = useEffectEvent(() => {
+  const clearSession = useCallback(() => {
     queryClient.clear();
     startTransition(() => {
       setCurrentUser(null);
       setStatus("anonymous");
     });
-  });
+  }, [queryClient]);
 
-  async function refreshSession() {
+  const refreshSession = useCallback(async () => {
     startTransition(() => {
       setStatus("loading");
       setBootstrapError(null);
@@ -64,7 +64,7 @@ export function SessionProvider({ children }: { children: React.ReactNode }) {
         setBootstrapError(error instanceof Error ? error.message : "Impossibile contattare il backend.");
       });
     }
-  }
+  }, []);
 
   useEffect(() => {
     setUnauthorizedHandler(() => {
@@ -76,7 +76,7 @@ export function SessionProvider({ children }: { children: React.ReactNode }) {
     return () => {
       setUnauthorizedHandler(undefined);
     };
-  }, [clearSession]);
+  }, [clearSession, refreshSession]);
 
   async function login(username: string, password: string) {
     const response = await authApi.login({ username, password });

@@ -1,14 +1,17 @@
+import { Suspense, lazy } from "react";
 import { Navigate, Route, BrowserRouter as Router, Routes } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
-import { AppShell } from "./AppShell";
+import { LoadingScreen } from "./components/Feedback";
 import { NotificationsProvider } from "./notifications";
 import { RedirectIfAuthenticated, RequireAuth, SessionProvider } from "./session";
-import { LoginPage } from "./pages/LoginPage";
-import { NotFoundPage } from "./pages/NotFoundPage";
-import { OrderDetailPage } from "./pages/OrderDetailPage";
-import { OrderEntryPage } from "./pages/OrderEntryPage";
-import { OrdersPage } from "./pages/OrdersPage";
+
+const AppShell = lazy(() => import("./AppShell").then((module) => ({ default: module.AppShell })));
+const LoginPage = lazy(() => import("./pages/LoginPage").then((module) => ({ default: module.LoginPage })));
+const NotFoundPage = lazy(() => import("./pages/NotFoundPage").then((module) => ({ default: module.NotFoundPage })));
+const OrderDetailPage = lazy(() => import("./pages/OrderDetailPage").then((module) => ({ default: module.OrderDetailPage })));
+const OrderEntryPage = lazy(() => import("./pages/OrderEntryPage").then((module) => ({ default: module.OrderEntryPage })));
+const OrdersPage = lazy(() => import("./pages/OrdersPage").then((module) => ({ default: module.OrdersPage })));
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -32,30 +35,32 @@ export default function App() {
       <NotificationsProvider>
         <SessionProvider>
           <Router>
-            <Routes>
-              <Route
-                path="/login"
-                element={(
-                  <RedirectIfAuthenticated>
-                    <LoginPage />
-                  </RedirectIfAuthenticated>
-                )}
-              />
-              <Route
-                path="/"
-                element={(
-                  <RequireAuth>
-                    <AppShell />
-                  </RequireAuth>
-                )}
-              >
-                <Route index element={<Navigate to="/ordini/nuovo" replace />} />
-                <Route path="ordini/nuovo" element={<OrderEntryPage />} />
-                <Route path="ordini" element={<OrdersPage />} />
-                <Route path="ordini/:orderId" element={<OrderDetailPage />} />
-              </Route>
-              <Route path="*" element={<NotFoundPage />} />
-            </Routes>
+            <Suspense fallback={<LoadingScreen />}>
+              <Routes>
+                <Route
+                  path="/login"
+                  element={(
+                    <RedirectIfAuthenticated>
+                      <LoginPage />
+                    </RedirectIfAuthenticated>
+                  )}
+                />
+                <Route
+                  path="/"
+                  element={(
+                    <RequireAuth>
+                      <AppShell />
+                    </RequireAuth>
+                  )}
+                >
+                  <Route index element={<Navigate to="/ordini/nuovo" replace />} />
+                  <Route path="ordini/nuovo" element={<OrderEntryPage />} />
+                  <Route path="ordini" element={<OrdersPage />} />
+                  <Route path="ordini/:orderId" element={<OrderDetailPage />} />
+                </Route>
+                <Route path="*" element={<NotFoundPage />} />
+              </Routes>
+            </Suspense>
           </Router>
         </SessionProvider>
       </NotificationsProvider>

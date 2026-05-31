@@ -204,7 +204,7 @@ function KitchenAreaDialog({
       </DialogContent>
       <DialogActions sx={{ p: 3 }}>
         <Button onClick={onClose} disabled={mutation.isPending}>Annulla</Button>
-        <Button variant="contained" onClick={void form.handleSubmit((values) => mutation.mutate(values))} disabled={mutation.isPending}>
+        <Button variant="contained" onClick={form.handleSubmit((values) => mutation.mutate(values))} disabled={mutation.isPending}>
           Salva
         </Button>
       </DialogActions>
@@ -306,7 +306,7 @@ function PrinterDialog({
       </DialogContent>
       <DialogActions sx={{ p: 3 }}>
         <Button onClick={onClose} disabled={mutation.isPending}>Annulla</Button>
-        <Button variant="contained" onClick={void form.handleSubmit((values) => mutation.mutate(values))} disabled={mutation.isPending}>
+        <Button variant="contained" onClick={form.handleSubmit((values) => mutation.mutate(values))} disabled={mutation.isPending}>
           Salva
         </Button>
       </DialogActions>
@@ -383,7 +383,7 @@ function CategoryDialog({
       </DialogContent>
       <DialogActions sx={{ p: 3 }}>
         <Button onClick={onClose} disabled={mutation.isPending}>Annulla</Button>
-        <Button variant="contained" onClick={void form.handleSubmit((values) => mutation.mutate(values))} disabled={mutation.isPending}>
+        <Button variant="contained" onClick={form.handleSubmit((values) => mutation.mutate(values))} disabled={mutation.isPending}>
           Salva
         </Button>
       </DialogActions>
@@ -496,7 +496,7 @@ function MenuItemDialog({
       </DialogContent>
       <DialogActions sx={{ p: 3 }}>
         <Button onClick={onClose} disabled={mutation.isPending}>Annulla</Button>
-        <Button variant="contained" onClick={void form.handleSubmit((values) => mutation.mutate(values))} disabled={mutation.isPending}>
+        <Button variant="contained" onClick={form.handleSubmit((values) => mutation.mutate(values))} disabled={mutation.isPending}>
           Salva
         </Button>
       </DialogActions>
@@ -638,7 +638,7 @@ function OptionGroupDialog({
       </DialogContent>
       <DialogActions sx={{ p: 3 }}>
         <Button onClick={onClose} disabled={mutation.isPending}>Annulla</Button>
-        <Button variant="contained" onClick={void form.handleSubmit((values) => mutation.mutate(values))} disabled={mutation.isPending}>
+        <Button variant="contained" onClick={form.handleSubmit((values) => mutation.mutate(values))} disabled={mutation.isPending}>
           Salva
         </Button>
       </DialogActions>
@@ -729,7 +729,7 @@ function OptionDialog({
       </DialogContent>
       <DialogActions sx={{ p: 3 }}>
         <Button onClick={onClose} disabled={mutation.isPending}>Annulla</Button>
-        <Button variant="contained" onClick={void form.handleSubmit((values) => mutation.mutate(values))} disabled={mutation.isPending}>
+        <Button variant="contained" onClick={form.handleSubmit((values) => mutation.mutate(values))} disabled={mutation.isPending}>
           Salva
         </Button>
       </DialogActions>

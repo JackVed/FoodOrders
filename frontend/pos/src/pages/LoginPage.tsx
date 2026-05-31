@@ -61,7 +61,7 @@ export function LoginPage() {
     >
       <Card elevation={0} sx={{ width: "100%", maxWidth: 520, border: "1px solid rgba(18, 102, 79, 0.14)" }}>
         <CardContent sx={{ p: 5 }}>
-          <Stack spacing={3} component="form" onSubmit={void handleSubmit(onSubmit)}>
+          <Stack spacing={3} component="form" onSubmit={handleSubmit(onSubmit)}>
             <Box>
               <Typography variant="overline" color="secondary.main" sx={{ letterSpacing: 1.2 }}>
                 FoodOrders

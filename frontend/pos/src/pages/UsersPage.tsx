@@ -128,7 +128,7 @@ function CreateUserDialog({
       </DialogContent>
       <DialogActions sx={{ p: 3 }}>
         <Button onClick={onClose} disabled={mutation.isPending}>Annulla</Button>
-        <Button variant="contained" startIcon={<PersonAddAlt1Icon />} onClick={void form.handleSubmit((values) => mutation.mutate(values))} disabled={mutation.isPending}>
+        <Button variant="contained" startIcon={<PersonAddAlt1Icon />} onClick={form.handleSubmit((values) => mutation.mutate(values))} disabled={mutation.isPending}>
           Crea utente
         </Button>
       </DialogActions>
@@ -216,7 +216,7 @@ function EditUserDialog({
       </DialogContent>
       <DialogActions sx={{ p: 3 }}>
         <Button onClick={onClose} disabled={mutation.isPending}>Annulla</Button>
-        <Button variant="contained" startIcon={<EditIcon />} onClick={void form.handleSubmit((values) => mutation.mutate(values))} disabled={mutation.isPending}>
+        <Button variant="contained" startIcon={<EditIcon />} onClick={form.handleSubmit((values) => mutation.mutate(values))} disabled={mutation.isPending}>
           Salva modifiche
         </Button>
       </DialogActions>
@@ -280,7 +280,7 @@ function PasswordDialog({
       </DialogContent>
       <DialogActions sx={{ p: 3 }}>
         <Button onClick={onClose} disabled={mutation.isPending}>Annulla</Button>
-        <Button variant="contained" startIcon={<KeyIcon />} onClick={void form.handleSubmit((values) => mutation.mutate(values))} disabled={mutation.isPending}>
+        <Button variant="contained" startIcon={<KeyIcon />} onClick={form.handleSubmit((values) => mutation.mutate(values))} disabled={mutation.isPending}>
           Aggiorna password
         </Button>
       </DialogActions>

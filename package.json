@@ -10,6 +10,10 @@
     "build:tableside": "pnpm --filter @foodorders/tableside build",
     "typecheck:pos": "pnpm --filter @foodorders/pos typecheck",
     "typecheck:tableside": "pnpm --filter @foodorders/tableside typecheck",
-    "typecheck": "pnpm --filter @foodorders/backend typecheck && pnpm --filter @foodorders/pos typecheck && pnpm --filter @foodorders/tableside typecheck"
+    "typecheck": "pnpm --filter @foodorders/backend typecheck && pnpm --filter @foodorders/pos typecheck && pnpm --filter @foodorders/tableside typecheck",
+    "test:e2e:pos": "pnpm --filter @foodorders/pos test:e2e",
+    "test:e2e:pos:headed": "pnpm --filter @foodorders/pos test:e2e:headed",
+    "test:e2e:pos:ui": "pnpm --filter @foodorders/pos test:e2e:ui",
+    "test:e2e:pos:debug": "pnpm --filter @foodorders/pos test:e2e:debug"
   }
 }

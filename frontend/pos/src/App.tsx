@@ -1,18 +1,29 @@
+import { Suspense, lazy } from "react";
 import { Navigate, Route, BrowserRouter as Router, Routes } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 import { AppShell } from "./AppShell";
+import { LoadingCard } from "./components/Feedback";
 import { NotificationsProvider } from "./notifications";
 import { RedirectIfAuthenticated, RequireAuth, RequireRole, SessionProvider } from "./session";
 import { LoginPage } from "./pages/LoginPage";
-import { ManagementPage } from "./pages/ManagementPage";
 import { NotFoundPage } from "./pages/NotFoundPage";
 import { OrderDetailPage } from "./pages/OrderDetailPage";
 import { OrderEntryPage } from "./pages/OrderEntryPage";
 import { OrdersPage } from "./pages/OrdersPage";
 import { TicketDetailPage } from "./pages/TicketDetailPage";
 import { TicketsPage } from "./pages/TicketsPage";
-import { UsersPage } from "./pages/UsersPage";
+
+const ManagementPage = lazy(() => import("./pages/ManagementPage").then((module) => ({ default: module.ManagementPage })));
+const UsersPage = lazy(() => import("./pages/UsersPage").then((module) => ({ default: module.UsersPage })));
+
+function LazyRoute({ children }: { children: React.ReactNode }) {
+  return (
+    <Suspense fallback={<LoadingCard message="Caricamento pagina in corso..." />}>
+      {children}
+    </Suspense>
+  );
+}
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -63,7 +74,9 @@ export default function App() {
                   path="gestione"
                   element={(
                     <RequireRole minimumRole="management">
-                      <ManagementPage />
+                      <LazyRoute>
+                        <ManagementPage />
+                      </LazyRoute>
                     </RequireRole>
                   )}
                 />
@@ -71,7 +84,9 @@ export default function App() {
                   path="utenti"
                   element={(
                     <RequireRole minimumRole="management">
-                      <UsersPage />
+                      <LazyRoute>
+                        <UsersPage />
+                      </LazyRoute>
                     </RequireRole>
                   )}
                 />

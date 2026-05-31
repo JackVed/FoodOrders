@@ -61,6 +61,30 @@ If product behavior is unclear, ask the user for the missing rule instead of inv
 - Prefer straightforward CRUD-oriented workflows and explicit statuses.
 - Keep features small and easy to operate by a single hobby maintainer.
 
+## Example Menu And Pricing Logic
+
+- Use the following menu as a canonical example of how configurable food items and fixed-price items can coexist in the same menu.
+- All the prices are in euros. We assume the currency is euros and do not add multi-currency support unless the user asks for it.
+- Example menu categories and items:
+	- Panini: compose your sandwich.
+	- Piadine: compose your piadina.
+	- Fried: patatine fritte piccole 4; patatine fritte grandi 6; nuggets 5.
+	- Beers: birra pils piccola 3.5; birra pils grande 6; birra ipa piccola 4; birra ipa grande 7; birra helles piccola 4; birra helles grande 6.
+	- Soft drinks: coca cola 4; tea 4; coffee 1.5.
+	- Drinks: gin tonic 6; moscow mule 9; london mule 8.
+- Panini pricing logic:
+	- Base price: 5.
+	- First meat: +1.00.
+	- Each additional meat after the first: +1.50.
+	- Cheese: +0.50.
+	- Vegetables: +0.50 once if at least one vegetable is selected, regardless of how many vegetables are chosen.
+- Piadine follow the same composition and pricing logic as panini.
+- Example meat options for panini and piadine: cotto, porchetta, salsiccia.
+- Example vegetable options for panini and piadine: cipolle, peperoni, funghi.
+- Worked examples:
+	- Panino with cotto + porchetta + cheese + peperoni = 8.5 because 5 + 1.0 + 1.5 + 0.5 + 0.5 = 8.5.
+	- Panino with porchetta + cipolle + funghi = 6.5 because 5 + 1.0 + 0.5 = 6.5 and any number of vegetables still costs only 0.5.
+
 ## Scope Boundaries
 
 - Do not invent payment workflows, discounts, delivery flows, reservations, accounting features, cancellation flows, or reprint flows unless the user asks for them.

@@ -3,9 +3,10 @@ import { buildApp } from "./app.js";
 const app = buildApp();
 
 async function start() {
+  await app.ready();
   await app.listen({
-    host: "0.0.0.0",
-    port: 3000,
+    host: app.config.HOST,
+    port: app.config.PORT,
   });
 }
 

@@ -2,6 +2,7 @@ import { and, eq, isNull } from "drizzle-orm";
 import fp from "fastify-plugin";
 
 import { sessions, users } from "../db/schema/index.js";
+import { hasMinimumRole } from "../modules/auth/authorization.js";
 import { hashSessionToken, type AuthenticatedUser } from "../modules/auth/session.js";
 
 const authPlugin = fp(async (app) => {
@@ -71,6 +72,22 @@ const authPlugin = fp(async (app) => {
     });
     reply.code(401).send({
       message: "Autenticazione richiesta.",
+    });
+  });
+
+  app.decorate("authorize", (minimumRole) => async (request, reply) => {
+    await app.authenticate(request, reply);
+
+    if (reply.sent) {
+      return;
+    }
+
+    if (!request.currentUser || hasMinimumRole(request.currentUser.role, minimumRole)) {
+      return;
+    }
+
+    reply.code(403).send({
+      message: "Permessi insufficienti.",
     });
   });
 }, {

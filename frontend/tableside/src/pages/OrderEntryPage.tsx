@@ -391,6 +391,8 @@ export function OrderEntryPage() {
       items,
     }),
     onSuccess(data) {
+      const failedDeliveryCount = data.deliveryResults.filter((result) => !result.success).length;
+
       setLastCreatedOrder({
         orderId: data.order.id,
         reference: data.order.reference,
@@ -404,7 +406,12 @@ export function OrderEntryPage() {
       setCartLines([]);
       setCartDialogOpen(false);
       void queryClient.invalidateQueries({ queryKey: ["orders"] });
-      notify(`Ordine ${data.order.reference} inviato.`, "success");
+      notify(
+        failedDeliveryCount === 0
+          ? `Ordine ${data.order.reference} inviato.`
+          : `Ordine ${data.order.reference} registrato, ma ${failedDeliveryCount} ticket richiedono attenzione.`,
+        failedDeliveryCount === 0 ? "success" : "warning",
+      );
     },
     onError(error) {
       notify(error instanceof ApiError ? error.message : "Invio ordine non riuscito.", "error");

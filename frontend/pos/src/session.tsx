@@ -10,7 +10,7 @@ import { LoadingScreen } from "./components/Feedback";
 import { hasMinimumRole } from "./lib/roles";
 import type { AuthenticatedUser, UserRole } from "./types";
 
-type SessionStatus = "loading" | "authenticated" | "anonymous";
+type SessionStatus = "loading" | "authenticated" | "anonymous" | "unavailable";
 
 interface SessionContextValue {
   currentUser: AuthenticatedUser | null;
@@ -33,6 +33,7 @@ export function SessionProvider({ children }: { children: React.ReactNode }) {
     queryClient.clear();
     startTransition(() => {
       setCurrentUser(null);
+      setBootstrapError(null);
       setStatus("anonymous");
     });
   }, [queryClient]);
@@ -62,7 +63,7 @@ export function SessionProvider({ children }: { children: React.ReactNode }) {
 
       startTransition(() => {
         setCurrentUser(null);
-        setStatus("anonymous");
+        setStatus("unavailable");
         setBootstrapError(error instanceof Error ? error.message : "Impossibile contattare il backend.");
       });
     }
@@ -116,12 +117,50 @@ export function useSession() {
   return context;
 }
 
+function BackendUnavailableState({
+  message,
+  onRetry,
+}: {
+  message: string;
+  onRetry: () => Promise<void>;
+}) {
+  return (
+    <Box sx={{ minHeight: "100vh", display: "grid", placeItems: "center", p: 4 }}>
+      <Card elevation={0} sx={{ maxWidth: 560, width: "100%", border: "1px solid rgba(18, 102, 79, 0.14)" }}>
+        <CardContent sx={{ p: 4 }}>
+          <Stack spacing={2}>
+            <Typography variant="h2">Backend non raggiungibile</Typography>
+            <Typography color="text.secondary">{message}</Typography>
+            <Typography color="text.secondary">
+              La sessione non puo essere verificata finche la connessione con il backend non torna disponibile.
+            </Typography>
+            <Button onClick={() => {
+              void onRetry();
+            }}>
+              Riprova connessione
+            </Button>
+          </Stack>
+        </CardContent>
+      </Card>
+    </Box>
+  );
+}
+
 export function RequireAuth({ children }: { children: React.ReactNode }) {
   const location = useLocation();
-  const { status } = useSession();
+  const { status, bootstrapError, refreshSession } = useSession();
 
   if (status === "loading") {
     return <LoadingScreen />;
+  }
+
+  if (status === "unavailable") {
+    return (
+      <BackendUnavailableState
+        message={bootstrapError ?? "Impossibile contattare il backend."}
+        onRetry={refreshSession}
+      />
+    );
   }
 
   if (status === "anonymous") {
@@ -133,11 +172,20 @@ export function RequireAuth({ children }: { children: React.ReactNode }) {
 
 export function RedirectIfAuthenticated({ children }: { children: React.ReactNode }) {
   const location = useLocation();
-  const { status } = useSession();
+  const { status, bootstrapError, refreshSession } = useSession();
   const from = (location.state as { from?: string } | null)?.from;
 
   if (status === "loading") {
     return <LoadingScreen />;
+  }
+
+  if (status === "unavailable") {
+    return (
+      <BackendUnavailableState
+        message={bootstrapError ?? "Impossibile contattare il backend."}
+        onRetry={refreshSession}
+      />
+    );
   }
 
   if (status === "authenticated") {

@@ -43,6 +43,11 @@ FoodOrders is a small fair-ordering system with a desktop POS app, a mobile-firs
 - Kitchen tickets: `/api/kitchen-tickets`, `/api/kitchen-tickets/:id`, `/api/kitchen-tickets/:id/retry-delivery`, `/api/kitchen-tickets/:id/mark-printed`
 - Management configuration: `/api/management/configuration` plus CRUD routes for kitchen areas, printers, categories, items, option groups, and options
 
+## To Do
+
+- Implement real kitchen-printer delivery for `network` and/or `system` transports. Today only `mock` can deliver successfully.
+- Decide whether order submission must be blocked when no enabled printer is configured for a kitchen area. Today the backend can still create kitchen tickets with `printerId = null`, which requires manual operator attention.
+
 ## Notes
 
 - Default bootstrap credentials come from `ADMIN_USERNAME` and `ADMIN_PASSWORD`. Change them before running outside local development.

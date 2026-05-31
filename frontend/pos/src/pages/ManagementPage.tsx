@@ -235,6 +235,7 @@ function PrinterDialog({
       isEnabled: entity?.isEnabled ?? true,
     },
   });
+  const selectedTransportType = form.watch("transportType");
 
   useEffect(() => {
     form.reset({
@@ -289,17 +290,24 @@ function PrinterDialog({
             label="Trasporto"
             options={[
               { value: "mock", label: "Mock" },
-              { value: "network", label: "Rete" },
-              { value: "system", label: "Sistema" },
+              { value: "network", label: "Rete (non implementato)" },
+              { value: "system", label: "Sistema (non implementato)" },
             ]}
           />
+          {selectedTransportType !== "mock" ? (
+            <Alert severity="warning">
+              I trasporti Rete e Sistema sono ancora placeholder: il backend registrera un tentativo fallito finche non verra implementata l'integrazione reale.
+            </Alert>
+          ) : null}
           <ControlledTextField
             control={form.control}
             name="connectionConfigText"
             label="Configurazione JSON"
             multiline
             rows={6}
-            helperText={'Esempio: {} oppure {"forceFailure": true} per la mock printer.'}
+            helperText={selectedTransportType === "mock"
+              ? 'Esempio: {} oppure {"forceFailure": true} per la mock printer.'
+              : 'Mantieni solo la configurazione che vorrai usare quando il trasporto reale sara implementato.'}
           />
           <ControlledSwitchField control={form.control} name="isEnabled" label="Stampante abilitata" />
         </Stack>

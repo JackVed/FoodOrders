@@ -5,8 +5,11 @@
   "scripts": {
     "install:all": "pnpm install",
     "dev:pos": "pnpm --filter @foodorders/pos dev",
+    "dev:tableside": "pnpm --filter @foodorders/tableside dev",
     "build:pos": "pnpm --filter @foodorders/pos build",
+    "build:tableside": "pnpm --filter @foodorders/tableside build",
     "typecheck:pos": "pnpm --filter @foodorders/pos typecheck",
-    "typecheck": "pnpm --filter @foodorders/backend typecheck && pnpm --filter @foodorders/pos typecheck"
+    "typecheck:tableside": "pnpm --filter @foodorders/tableside typecheck",
+    "typecheck": "pnpm --filter @foodorders/backend typecheck && pnpm --filter @foodorders/pos typecheck && pnpm --filter @foodorders/tableside typecheck"
   }
 }

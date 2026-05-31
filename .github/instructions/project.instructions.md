@@ -38,6 +38,13 @@ If product behavior is unclear, ask the user for the missing rule instead of inv
 - `operator`: can create food orders and view food orders already sent.
 - Users are never hard-deleted. User removal is handled by disabling accounts.
 
+## Authentication And Sessions
+
+- FoodOrders assumes app-managed user accounts by default.
+- Users sign in with a username and password unless the user explicitly asks for external identity integration.
+- Authentication should support long-lived sessions so operators are not forced to log in repeatedly during fair operations.
+- Disabling a user must immediately remove access, including any active sessions on POS or Tableside devices.
+
 ## Order And Ticket Behavior
 
 - Payment is out of scope because a separate system handles it.

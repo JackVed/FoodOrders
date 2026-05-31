@@ -31,6 +31,8 @@ Use [product context](./instructions/project.instructions.md) for workflow, role
 - Keep the architecture simple and modular.
 - Assume a shared backend API and shared data model for the POS app and the Tableside app unless the repository later says otherwise.
 - Keep POS and Tableside concerns separated even when they share backend logic.
+- Default authentication to first-party app-managed accounts with username and password unless the user explicitly asks for an external identity provider.
+- Prefer server-side sessions stored in PostgreSQL over browser-stored JWTs for the default web authentication model.
 - Treat kitchen printing as a core domain capability, not as an afterthought.
 - Isolate printer transport behind an adapter so the domain stays unchanged whether printers connect over Wi-Fi or cable.
 - Model printer routing so a single order can split across multiple kitchen tickets by item while preserving a shared order reference.
@@ -49,6 +51,10 @@ Use [product context](./instructions/project.instructions.md) for workflow, role
 - Prefer Drizzle ORM to keep SQL and database behavior explicit, especially around orders, ticket splitting, and printer routing.
 - Use Zod as the default validation layer for backend inputs, outputs, and shared contracts.
 - Use pg-boss only when printer execution or other work must be retried or decoupled from request handling; do not introduce extra infrastructure such as Redis unless there is a clear need.
+- Hash passwords with Argon2id when implementing local credentials.
+- Store sessions in PostgreSQL with opaque random session identifiers and persist them in secure, HttpOnly cookies.
+- Enforce authorization in the backend on every request using the current user role rather than trusting frontend route guards.
+- Revoke active sessions immediately when a user is disabled.
 - For libraries outside the selected frontend stack, present a small set of options and explain the tradeoffs before committing.
 - Keep mobile-first constraints in mind for the Tableside app.
 - Keep desktop efficiency in mind for the POS app.
@@ -62,6 +68,10 @@ Use [product context](./instructions/project.instructions.md) for workflow, role
 - Do not add multi-language infrastructure or translation layers unless the user asks for them.
 - Assume the apps operate online. Do not design for offline-first sync, queued local mutations, or disconnected workflows unless the user asks for them.
 - Default to long-lived authenticated sessions of about 7 days so operators and waiters are not forced to log in repeatedly during operations.
+- Prefer deploying the frontend apps and the backend API as same-site subdomains under one parent domain so cookie-based sessions remain reliable, especially on mobile Safari.
+- Treat CORS and cookie `SameSite` as separate concerns: same-site subdomains still require explicit credentialed CORS, but do not require a cross-site cookie setup.
+- Prefer a host-only session cookie scoped to the API host unless there is a proven need to expose the cookie to sibling subdomains.
+- Add a simple periodic cleanup for expired session rows and index `expires_at`; if pg-boss is already in use, a daily cron job there is fine, otherwise use any lightweight scheduler.
 - Payment integration is out of scope and should not drive the design.
 - Cancellation and reprint behavior are out of scope for the first version unless the user asks for them.
 - Add brief code comments where they help explain non-obvious logic or business rules, especially around ticket splitting, printer routing, or POS versus Tableside behavior.
@@ -69,7 +79,7 @@ Use [product context](./instructions/project.instructions.md) for workflow, role
 ## Working Style For Copilot
 
 - Ask for missing operational details instead of inventing them.
-- Good examples of details to clarify are printer failure handling, exact authentication flow, printer protocol or vendor specifics, and any remaining library choices.
+- Good examples of details to clarify are printer failure handling, bootstrap or password-reset flow, printer protocol or vendor specifics, and any remaining library choices.
 - If MCP tools, database access, or browser automation are needed, tell the user what is needed and how to provide or enable it.
 - If a MUI MCP server is configured, use it when working on MUI components or patterns so generated UI stays aligned with the upstream component guidance.
 - Do not assume Azure, Playwright, or database MCP access is already configured just because the project may use those tools later.

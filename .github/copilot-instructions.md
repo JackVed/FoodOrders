@@ -10,7 +10,7 @@ Use [product context](./instructions/project.instructions.md) for workflow, role
 - Frontend router: React Router.
 - Frontend server-state library: TanStack Query.
 - Frontend form stack: React Hook Form with Zod validation.
-- Frontend UI baseline: shadcn/ui.
+- Frontend UI baseline: MUI.
 - Backend direction: Node.js with TypeScript.
 - Backend HTTP framework: Fastify.
 - Backend schema validation: Zod.
@@ -55,7 +55,7 @@ Use [product context](./instructions/project.instructions.md) for workflow, role
 - Use React Router for app navigation instead of introducing a heavier full-stack framework by default.
 - Use TanStack Query for backend data fetching, caching, and mutation state in the frontend apps.
 - Use React Hook Form and Zod for forms and validation unless the user asks for a simpler alternative.
-- Use shadcn/ui as the base component system and adapt its components to the project's design and workflow needs.
+- Use MUI as the base component system and adapt its components to the project's design and workflow needs.
 - Treat shared schemas, API contracts, and reusable frontend utilities as good candidates for workspace packages when they are used by more than one app.
 - Prefer a documented REST JSON API between frontend apps and backend unless the user asks to revisit that choice.
 - Keep user-facing labels and UI copy Italian-only unless the user explicitly asks for localization.
@@ -71,6 +71,6 @@ Use [product context](./instructions/project.instructions.md) for workflow, role
 - Ask for missing operational details instead of inventing them.
 - Good examples of details to clarify are printer failure handling, exact authentication flow, printer protocol or vendor specifics, and any remaining library choices.
 - If MCP tools, database access, or browser automation are needed, tell the user what is needed and how to provide or enable it.
-- If a shadcn/ui MCP server is configured, use it when working on shadcn/ui components or patterns so generated UI stays aligned with the upstream component guidance.
+- If a MUI MCP server is configured, use it when working on MUI components or patterns so generated UI stays aligned with the upstream component guidance.
 - Do not assume Azure, Playwright, or database MCP access is already configured just because the project may use those tools later.
 - Keep changes aligned with the current early-stage repository and avoid scaffolding more than the task requires.

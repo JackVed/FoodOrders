@@ -337,6 +337,8 @@ Relationship notes:
 
 Stores the audit trail for every attempt to deliver a kitchen ticket to a printer. It is used for diagnostics, retry flows, and manual follow-up.
 
+Short note: this table records real delivery executions, both during automatic delivery right after order creation and during manual retry actions. It is a delivery history table, not the source of truth for current ticket state: the current state remains on `kitchen_tickets.status` and `orders.status`.
+
 | Column | Type | Notes | What It Does |
 | --- | --- | --- | --- |
 | `id` | `integer` | Primary key, identity | Internal delivery-attempt identifier. |

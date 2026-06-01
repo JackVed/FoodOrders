@@ -161,6 +161,8 @@ Relationship notes:
 
 Stores sellable menu entries. Items can be fixed-price products or composable products with option groups.
 
+Short note: the current seeded and observed data leaves `kitchen_area_id` null on menu items, so routing currently inherits from `menu_categories.kitchen_area_id`. The column is still kept on `menu_items` as an optional per-item override for future exceptions where a single item in a category may need different kitchen routing.
+
 | Column | Type | Notes | What It Does |
 | --- | --- | --- | --- |
 | `id` | `integer` | Primary key, identity | Internal menu item identifier. |

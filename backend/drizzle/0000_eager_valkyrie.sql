@@ -100,6 +100,8 @@ CREATE TABLE "kitchen_ticket_items" (
 	"id" integer PRIMARY KEY GENERATED ALWAYS AS IDENTITY (sequence name "kitchen_ticket_items_id_seq" INCREMENT BY 1 MINVALUE 1 MAXVALUE 2147483647 START WITH 1 CACHE 1),
 	"kitchen_ticket_id" integer NOT NULL,
 	"order_item_id" integer NOT NULL,
+	"order_id" integer NOT NULL,
+	"kitchen_area_id" integer NOT NULL,
 	"display_name_snapshot" text NOT NULL,
 	"quantity" integer DEFAULT 1 NOT NULL,
 	"sort_order" integer DEFAULT 0 NOT NULL
@@ -162,6 +164,9 @@ CREATE TABLE "ticket_delivery_attempts" (
 	"raw_response_json" jsonb
 );
 --> statement-breakpoint
+CREATE UNIQUE INDEX "printers_id_kitchen_area_key" ON "printers" USING btree ("id","kitchen_area_id");--> statement-breakpoint
+CREATE UNIQUE INDEX "kitchen_tickets_id_order_kitchen_area_key" ON "kitchen_tickets" USING btree ("id","order_id","kitchen_area_id");--> statement-breakpoint
+CREATE UNIQUE INDEX "order_items_id_order_kitchen_area_key" ON "order_items" USING btree ("id","order_id","kitchen_area_id");--> statement-breakpoint
 ALTER TABLE "sessions" ADD CONSTRAINT "sessions_user_id_users_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."users"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "menu_categories" ADD CONSTRAINT "menu_categories_kitchen_area_id_kitchen_areas_id_fk" FOREIGN KEY ("kitchen_area_id") REFERENCES "public"."kitchen_areas"("id") ON DELETE restrict ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "menu_item_option_groups" ADD CONSTRAINT "menu_item_option_groups_menu_item_id_menu_items_id_fk" FOREIGN KEY ("menu_item_id") REFERENCES "public"."menu_items"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
@@ -169,11 +174,12 @@ ALTER TABLE "menu_item_options" ADD CONSTRAINT "menu_item_options_option_group_i
 ALTER TABLE "menu_items" ADD CONSTRAINT "menu_items_category_id_menu_categories_id_fk" FOREIGN KEY ("category_id") REFERENCES "public"."menu_categories"("id") ON DELETE restrict ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "menu_items" ADD CONSTRAINT "menu_items_kitchen_area_id_kitchen_areas_id_fk" FOREIGN KEY ("kitchen_area_id") REFERENCES "public"."kitchen_areas"("id") ON DELETE set null ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "printers" ADD CONSTRAINT "printers_kitchen_area_id_kitchen_areas_id_fk" FOREIGN KEY ("kitchen_area_id") REFERENCES "public"."kitchen_areas"("id") ON DELETE restrict ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "kitchen_ticket_items" ADD CONSTRAINT "kitchen_ticket_items_kitchen_ticket_id_kitchen_tickets_id_fk" FOREIGN KEY ("kitchen_ticket_id") REFERENCES "public"."kitchen_tickets"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "kitchen_ticket_items" ADD CONSTRAINT "kitchen_ticket_items_order_item_id_order_items_id_fk" FOREIGN KEY ("order_item_id") REFERENCES "public"."order_items"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "kitchen_ticket_items" ADD CONSTRAINT "kitchen_ticket_items_ticket_order_area_fk" FOREIGN KEY ("kitchen_ticket_id","order_id","kitchen_area_id") REFERENCES "public"."kitchen_tickets"("id","order_id","kitchen_area_id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "kitchen_ticket_items" ADD CONSTRAINT "kitchen_ticket_items_order_item_order_area_fk" FOREIGN KEY ("order_item_id","order_id","kitchen_area_id") REFERENCES "public"."order_items"("id","order_id","kitchen_area_id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "kitchen_tickets" ADD CONSTRAINT "kitchen_tickets_order_id_orders_id_fk" FOREIGN KEY ("order_id") REFERENCES "public"."orders"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "kitchen_tickets" ADD CONSTRAINT "kitchen_tickets_kitchen_area_id_kitchen_areas_id_fk" FOREIGN KEY ("kitchen_area_id") REFERENCES "public"."kitchen_areas"("id") ON DELETE restrict ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "kitchen_tickets" ADD CONSTRAINT "kitchen_tickets_printer_id_printers_id_fk" FOREIGN KEY ("printer_id") REFERENCES "public"."printers"("id") ON DELETE set null ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "kitchen_tickets" ADD CONSTRAINT "kitchen_tickets_printer_area_fk" FOREIGN KEY ("printer_id","kitchen_area_id") REFERENCES "public"."printers"("id","kitchen_area_id") ON DELETE no action ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "order_item_selections" ADD CONSTRAINT "order_item_selections_order_item_id_order_items_id_fk" FOREIGN KEY ("order_item_id") REFERENCES "public"."order_items"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "order_items" ADD CONSTRAINT "order_items_order_id_orders_id_fk" FOREIGN KEY ("order_id") REFERENCES "public"."orders"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "order_items" ADD CONSTRAINT "order_items_menu_item_id_menu_items_id_fk" FOREIGN KEY ("menu_item_id") REFERENCES "public"."menu_items"("id") ON DELETE set null ON UPDATE no action;--> statement-breakpoint

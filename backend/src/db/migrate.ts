@@ -1,9 +1,9 @@
 import { migrate } from "drizzle-orm/postgres-js/migrator";
 
-import { loadConfig } from "../config/env.js";
+import { getConfig } from "../config/env.js";
 import { createDbConnection } from "./client.js";
 
-const config = loadConfig();
+const config = getConfig();
 const { db, sql } = createDbConnection(config);
 
 try {

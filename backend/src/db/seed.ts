@@ -1,5 +1,5 @@
 import { hashPassword } from "../modules/auth/password.js";
-import { loadConfig } from "../config/env.js";
+import { getSeedConfig } from "../config/env.js";
 import { createDbConnection } from "./client.js";
 import {
   kitchenAreas,
@@ -160,7 +160,7 @@ const optionGroupSeed: readonly SeedOptionGroupSet[] = [
   },
 ] as const;
 
-const config = loadConfig();
+const config = getSeedConfig();
 const { db, sql } = createDbConnection(config);
 
 try {

@@ -4,6 +4,7 @@ import { z } from "zod";
 
 import {
   kitchenAreas,
+  kitchenTickets,
   menuCategories,
   menuItemOptionGroups,
   menuItemOptions,
@@ -152,6 +153,22 @@ function isUniqueViolation(error: unknown) {
 
 function isForeignKeyViolation(error: unknown) {
   return typeof error === "object" && error !== null && "code" in error && error.code === "23503";
+}
+
+function getConstraintName(error: unknown) {
+  if (typeof error !== "object" || error === null) {
+    return null;
+  }
+
+  if ("constraint_name" in error && typeof error.constraint_name === "string") {
+    return error.constraint_name;
+  }
+
+  if ("constraint" in error && typeof error.constraint === "string") {
+    return error.constraint;
+  }
+
+  return null;
 }
 
 function buildPricingStrategyFields(value: z.infer<typeof optionGroupCreateSchema>) {
@@ -334,6 +351,45 @@ export async function registerManagementRoutes(app: FastifyInstance) {
     }
 
     try {
+      const existingPrinter = (
+        await app.db
+          .select({
+            id: printers.id,
+            kitchenAreaId: printers.kitchenAreaId,
+          })
+          .from(printers)
+          .where(eq(printers.id, parsedParams.data.id))
+          .limit(1)
+      )[0];
+
+      if (!existingPrinter) {
+        reply.code(404).send({
+          message: "Stampante non trovata.",
+        });
+        return;
+      }
+
+      const isChangingKitchenArea =
+        parsedBody.data.kitchenAreaId !== undefined
+        && parsedBody.data.kitchenAreaId !== existingPrinter.kitchenAreaId;
+
+      if (isChangingKitchenArea) {
+        const referencedTicket = (
+          await app.db
+            .select({ id: kitchenTickets.id })
+            .from(kitchenTickets)
+            .where(eq(kitchenTickets.printerId, existingPrinter.id))
+            .limit(1)
+        )[0];
+
+        if (referencedTicket) {
+          reply.code(409).send({
+            message: "Non puoi spostare la stampante in un'altra area cucina finche esistono ticket che la referenziano.",
+          });
+          return;
+        }
+      }
+
       const printer = (
         await app.db
           .update(printers)
@@ -351,7 +407,7 @@ export async function registerManagementRoutes(app: FastifyInstance) {
             ...(parsedBody.data.isEnabled !== undefined ? { isEnabled: parsedBody.data.isEnabled } : {}),
             updatedAt: new Date(),
           })
-          .where(eq(printers.id, parsedParams.data.id))
+            .where(eq(printers.id, existingPrinter.id))
           .returning()
       )[0];
 
@@ -372,6 +428,16 @@ export async function registerManagementRoutes(app: FastifyInstance) {
       }
 
       if (isForeignKeyViolation(error)) {
+        if (
+          getConstraintName(error)
+          === "kitchen_tickets_printer_area_fk"
+        ) {
+          reply.code(409).send({
+            message: "Non puoi spostare la stampante in un'altra area cucina finche esistono ticket che la referenziano.",
+          });
+          return;
+        }
+
         reply.code(400).send({
           message: "Area cucina non valida per la stampante.",
         });

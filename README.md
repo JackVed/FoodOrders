@@ -19,7 +19,7 @@ FoodOrders is a small fair-ordering system with a desktop POS app, a mobile-firs
 
 ## Backend Setup
 
-- Copy `backend/.env.example` to `backend/.env` and adjust the PostgreSQL and CORS settings for your machine.
+- Copy `backend/.env.example` to `backend/.env.local` and adjust the PostgreSQL, session, and admin bootstrap settings for your machine.
 - Apply the schema with `pnpm --filter @foodorders/backend db:migrate`.
 - Seed the admin user, kitchen areas, printers, and canonical menu with `pnpm --filter @foodorders/backend db:seed`.
 - Start the backend with `pnpm --filter @foodorders/backend dev`.
@@ -51,5 +51,7 @@ FoodOrders is a small fair-ordering system with a desktop POS app, a mobile-firs
 ## Notes
 
 - Default bootstrap credentials come from `ADMIN_USERNAME` and `ADMIN_PASSWORD`. Change them before running outside local development.
+- The backend loads `.env.local` and then `.env` only in development and test. Release environments should inject environment variables at runtime and should not rely on env files on disk.
+- Drizzle CLI uses the same backend config loader as the app, so migrations and the running server resolve the same database settings.
 - If `CORS_ORIGINS` is empty, development and test environments allow browser origins by default, while production expects explicit allowed origins.
 - Session cleanup runs periodically based on `SESSION_CLEANUP_INTERVAL_MINUTES` and deletes expired session rows.

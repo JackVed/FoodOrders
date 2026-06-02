@@ -1,9 +1,9 @@
 import fp from "fastify-plugin";
 
-import { loadConfig } from "../config/env.js";
+import { getConfig } from "../config/env.js";
 
 const envPlugin = fp(async (app) => {
-  const config = loadConfig();
+  const config = getConfig();
 
   app.decorate("config", config);
 }, {

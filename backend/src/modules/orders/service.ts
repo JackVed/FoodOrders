@@ -147,6 +147,8 @@ export async function createOrder(db: Database, actor: AuthenticatedUser, input:
         groupedItems.map((groupedItem, index) => ({
           kitchenTicketId: insertedTicket.id,
           orderItemId: groupedItem.id,
+          orderId: insertedOrder.id,
+          kitchenAreaId,
           displayNameSnapshot: groupedItem.displayNameSnapshot,
           quantity: groupedItem.quantity,
           sortOrder: index + 1,

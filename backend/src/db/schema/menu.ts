@@ -1,6 +1,7 @@
 import { sql } from "drizzle-orm";
 import {
   boolean,
+  foreignKey,
   index,
   integer,
   jsonb,
@@ -47,8 +48,14 @@ export const printers = pgTable(
   },
   (table) => [
     uniqueIndex("printers_name_key").on(table.name),
+    uniqueIndex("printers_id_kitchen_area_key").on(table.id, table.kitchenAreaId),
     index("printers_kitchen_area_id_idx").on(table.kitchenAreaId),
     index("printers_is_enabled_idx").on(table.isEnabled),
+    foreignKey({
+      name: "printers_kitchen_area_id_kitchen_areas_id_fk",
+      columns: [table.kitchenAreaId],
+      foreignColumns: [kitchenAreas.id],
+    }).onDelete("restrict"),
   ],
 );
 

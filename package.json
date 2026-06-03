@@ -1,0 +1,23 @@
+{
+  "name": "foodorders",
+  "private": true,
+  "packageManager": "pnpm@10.11.0",
+  "scripts": {
+    "install:all": "pnpm install",
+    "dev:pos": "pnpm --filter @foodorders/pos dev",
+    "dev:tableside": "pnpm --filter @foodorders/tableside dev",
+    "build:pos": "pnpm --filter @foodorders/pos build",
+    "build:tableside": "pnpm --filter @foodorders/tableside build",
+    "typecheck:pos": "pnpm --filter @foodorders/pos typecheck",
+    "typecheck:tableside": "pnpm --filter @foodorders/tableside typecheck",
+    "typecheck": "pnpm --filter @foodorders/backend typecheck && pnpm --filter @foodorders/pos typecheck && pnpm --filter @foodorders/tableside typecheck",
+    "test:e2e:pos": "pnpm --filter @foodorders/pos test:e2e",
+    "test:e2e:pos:headed": "pnpm --filter @foodorders/pos test:e2e:headed",
+    "test:e2e:pos:ui": "pnpm --filter @foodorders/pos test:e2e:ui",
+    "test:e2e:pos:debug": "pnpm --filter @foodorders/pos test:e2e:debug",
+    "test:e2e:tableside": "pnpm --filter @foodorders/tableside test:e2e",
+    "test:e2e:tableside:headed": "pnpm --filter @foodorders/tableside test:e2e:headed",
+    "test:e2e:tableside:ui": "pnpm --filter @foodorders/tableside test:e2e:ui",
+    "test:e2e:tableside:debug": "pnpm --filter @foodorders/tableside test:e2e:debug"
+  }
+}

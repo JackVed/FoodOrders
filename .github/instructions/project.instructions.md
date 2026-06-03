@@ -14,8 +14,8 @@ If product behavior is unclear, ask the user for the missing rule instead of inv
 ## Project Summary
 
 - FoodOrders is a hobby app for managing food orders during a fair.
-- The project is expected to serve about 20 users.
-- The expected load is about 300 new records per day, concentrated in about 5 days per year.
+- The project is expected to serve about 40 users.
+- The expected load is about 1000 new records per day, concentrated in about 5 days per year.
 - Optimize for operational simplicity and reliability during fair days rather than enterprise breadth.
 
 ## Frontend Apps

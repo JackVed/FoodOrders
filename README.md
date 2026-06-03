@@ -17,12 +17,79 @@ FoodOrders is a small fair-ordering system with a desktop POS app, a mobile-firs
 - CORS still needs to allow credentialed requests from the frontend origins even when those origins are same-site subdomains.
 - Session records should be cleaned up periodically by deleting expired rows from the session store.
 
-## Backend Setup
+## Local Development
 
-- Copy `backend/.env.example` to `backend/.env.local` and adjust the PostgreSQL, session, and admin bootstrap settings for your machine.
-- Apply the schema with `pnpm --filter @foodorders/backend db:migrate`.
-- Seed the admin user, kitchen areas, printers, and canonical menu with `pnpm --filter @foodorders/backend db:seed`.
-- Start the backend with `pnpm --filter @foodorders/backend dev`.
+From the repository root, install dependencies once:
+
+```powershell
+pnpm install
+```
+
+Before starting the apps, make sure a local PostgreSQL instance is running.
+
+Create `backend/.env.local` from `backend/.env.example` and fill in the required database and admin values. A simple local setup can use:
+
+```env
+NODE_ENV=development
+HOST=0.0.0.0
+PORT=3000
+DATABASE_HOST=localhost
+DATABASE_PORT=5432
+DATABASE_NAME=food_orders_db
+DATABASE_USER=postgres
+DATABASE_PASSWORD=admin
+DATABASE_SSL=false
+ADMIN_USERNAME=admin
+ADMIN_PASSWORD=admin
+```
+
+Apply the database schema:
+
+```powershell
+pnpm --filter @foodorders/backend db:migrate
+```
+
+Seed the local database:
+
+```powershell
+pnpm --filter @foodorders/backend db:seed
+```
+
+The seed creates or updates:
+
+- the bootstrap `admin` user from `ADMIN_USERNAME` and `ADMIN_PASSWORD`
+- three kitchen areas: `Cucina`, `Friggitrice`, and `Bar`
+- one enabled mock printer for each kitchen area
+- the canonical menu categories and fixed-price items
+- the composable `Panino` and `Piadina` items with their meats, cheese, and vegetables option groups
+
+Start each app in its own terminal, still from the repository root:
+
+1. Backend API:
+
+```powershell
+pnpm --filter @foodorders/backend dev
+```
+
+2. POS app:
+
+```powershell
+pnpm dev:pos
+```
+
+3. Tableside app:
+
+```powershell
+pnpm dev:tableside
+```
+
+Local URLs:
+
+- Backend API: `http://localhost:3000`
+- POS app: `http://localhost:5173`
+- Tableside app: `http://localhost:5174`
+
+The POS and Tableside frontends already use `http://localhost:3000` as the default API base URL, so no extra frontend env setup is needed if the backend runs on the default port.
 
 ## Backend Scope Implemented
 

@@ -96,7 +96,7 @@ function CreateUserDialog({
       password: "",
       role: availableRoles[0] ?? "operator",
     });
-  }, [availableRoles, form, open]);
+  }, [availableRoles, open]);
 
   const mutation = useMutation({
     mutationFn: (values: z.infer<typeof createUserSchema>) => usersApi.create(values),
@@ -168,7 +168,7 @@ function EditUserDialog({
       role: user?.role ?? (availableRoles[0] ?? "operator"),
       isEnabled: user?.isEnabled ?? true,
     });
-  }, [availableRoles, form, open, user]);
+  }, [availableRoles, open, user]);
 
   const mutation = useMutation({
     mutationFn: (values: z.infer<typeof editUserSchema>) => {
@@ -248,7 +248,7 @@ function PasswordDialog({
       password: "",
       confirmPassword: "",
     });
-  }, [form, open, user]);
+  }, [open, user]);
 
   const mutation = useMutation({
     mutationFn: (values: z.infer<typeof passwordSchema>) => {

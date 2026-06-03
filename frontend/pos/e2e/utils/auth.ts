@@ -11,7 +11,7 @@ export interface Credentials {
 
 export const adminCredentials: Credentials = {
   username: process.env.E2E_ADMIN_USERNAME ?? "admin",
-  password: process.env.E2E_ADMIN_PASSWORD ?? "change-me",
+  password: process.env.E2E_ADMIN_PASSWORD ?? "admin",
 };
 
 export async function expectLoginPage(page: Page) {

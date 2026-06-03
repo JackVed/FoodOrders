@@ -171,7 +171,7 @@ function KitchenAreaDialog({
       sortOrder: entity?.sortOrder ?? 0,
       isActive: entity?.isActive ?? true,
     });
-  }, [entity, form, open]);
+  }, [entity, open]);
 
   const mutation = useMutation({
     mutationFn: (values: z.infer<typeof kitchenAreaSchema>) => {
@@ -245,7 +245,7 @@ function PrinterDialog({
       connectionConfigText: JSON.stringify(entity?.connectionConfigJson ?? {}, null, 2),
       isEnabled: entity?.isEnabled ?? true,
     });
-  }, [entity, form, kitchenAreas, open]);
+  }, [entity, kitchenAreas, open]);
 
   const mutation = useMutation({
     mutationFn: (values: z.infer<typeof printerSchema>) => {
@@ -352,7 +352,7 @@ function CategoryDialog({
       sortOrder: entity?.sortOrder ?? 0,
       isActive: entity?.isActive ?? true,
     });
-  }, [entity, form, kitchenAreas, open]);
+  }, [entity, kitchenAreas, open]);
 
   const mutation = useMutation({
     mutationFn: (values: z.infer<typeof categorySchema>) => {
@@ -437,7 +437,7 @@ function MenuItemDialog({
       sortOrder: entity?.sortOrder ?? 0,
       isActive: entity?.isActive ?? true,
     });
-  }, [categories, entity, form, open]);
+  }, [categories, entity, open]);
 
   const mutation = useMutation({
     mutationFn: (values: z.infer<typeof menuItemSchema>) => {
@@ -525,7 +525,7 @@ function OptionGroupDialog({
 }) {
   const queryClient = useQueryClient();
   const { notify } = useNotifications();
-  const composableItems = items.filter((item) => item.itemType === "composable");
+  const composableItems = useMemo(() => items.filter((item) => item.itemType === "composable"), [items]);
   const form = useForm<z.infer<typeof optionGroupSchema>>({
     resolver: zodResolver(optionGroupSchema),
     defaultValues: {
@@ -559,7 +559,7 @@ function OptionGroupDialog({
       sortOrder: entity?.sortOrder ?? 0,
       isActive: entity?.isActive ?? true,
     });
-  }, [composableItems, entity, form, open]);
+  }, [composableItems, entity, open]);
 
   const pricingStrategy = form.watch("pricingStrategy");
 
@@ -688,7 +688,7 @@ function OptionDialog({
       sortOrder: entity?.sortOrder ?? 0,
       isActive: entity?.isActive ?? true,
     });
-  }, [entity, form, onClose, open, optionGroups]);
+  }, [entity, open, optionGroups]);
 
   const mutation = useMutation({
     mutationFn: (values: z.infer<typeof optionSchema>) => {
